@@ -5,9 +5,7 @@ function validator(req, res, next) { //function checks to see if user entered a 
   if(nameCheck){ //if the query type "name" exists continue
     next();
   } else {
-    next(error => {
-      res.status(500).send('No valid name provided'); //if querty type name does not exist send back error 500
-    })
+    next('No valid name provided'); //if query type name does not exist send back error 500
   }
 }
 

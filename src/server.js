@@ -9,18 +9,19 @@ const errorHandler = require('./error-handlers/500'); //import errorHandler modu
 const logRequest = require('./middleware/logger'); //import logger module
 const validator = require('./middleware/validator'); //import validator module
 
+//middleware
 app.use(express.json()); //body parser
 
-//routes
+app.use(logRequest); //logs all request attempts
+//app.use(validator); //validates all request attempts
 
-app.get('/person', getPerson); //GET person route, expects query with "name" property --> output json { name: "name provided" } or force 500 error
+//routes
+app.get('/person', validator, getPerson); //GET person route, expects query with "name" property --> output json { name: "name provided" } or force 500 error
 
 //middleware
 
-app.use(logRequest); //logs all request attempts
-app.use(validator); //validates all request attempts
-app.use('*', notFoundHandler); //GET not found 404 handler module
 app.use(errorHandler); //Handles all other errors
+app.use('*', notFoundHandler); //GET not found 404 handler module
 
 //functions
 
@@ -28,7 +29,7 @@ function getPerson (req, res) { //function returns name provided in query
   const nameGiven = req.query.name;
   let outputObj = { name: nameGiven };
   res.status(200).json(outputObj);
-  next();
+  //next();
 }
 
 function start(PORT){ //function that starts port
